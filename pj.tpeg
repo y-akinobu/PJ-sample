@@ -1,0 +1,55 @@
+example Statement 1にxを足した値
+
+Statement =
+  { Expression+ #Statement }
+   
+Expression = 
+  / Grouping
+  / { (Noun) Suffix #Argument }  // ???
+  / Verb
+  / Noun
+  / { .* #Unknown }
+     
+Grouping = { 
+  "{{" (!"}}" Expression)+ "}}" #Grouping 
+}
+
+"{{" = '{{' / '＜'
+"}}" = '}}' / '＞'
+
+// 動詞の後に続く節 (廃止)
+VerbBlock = 
+  / {^ Noun Suffix #That }
+  / {^ 'とき' #If}
+
+Noun = { NOUN #Noun } / Digit / Variable
+Digit = { DIGIT #Digit }
+Variable = { VARIABLE #Variable }
+Suffix = { SUFFIX #Suffix }
+Verb = { VERB #Verb }
+        
+NOUN = 
+  / (KANJI / KATA)+ // パターン：　漢字とカタカナは名詞
+  / 'の'
+  / 'とき'　　　　　// 辞書
+
+DIGIT = [0-9]+
+
+VARIABLE = ALPHA+ DIGIT*
+
+SUFFIX =
+  / 'は' 
+  / 'が' 
+  / 'を'
+  / 'に' 
+  / 'で'
+
+VERB =
+  / '見た'
+  / '泳ぐ'
+  / '足した'
+
+KANJI = [㐀-䶵一-龠々〇〻ーご]
+KATA = [ァ-ヶー・]
+HIRA = [ぁ-ん]
+ALPHA = [a-zA-Zａ-ｚＡ-Ｚ]
